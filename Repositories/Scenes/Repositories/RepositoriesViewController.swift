@@ -48,7 +48,7 @@ class RepositoriesViewController: DefaultListViewController, RepositoriesViewCon
     }
     
     func fetchRepositories(withPage page: Int) {
-        let request = RepositoriesRequest(withLanguage: "Java", sort: .Star, page: page)
+        let request = RepositoriesRequest(withLanguage: "Swift", sort: .Star, page: page)
         self.output.searchRepositories(withRequest: request)
     }
     
