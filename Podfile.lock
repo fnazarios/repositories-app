@@ -1,0 +1,46 @@
+PODS:
+  - Alamofire (3.3.0)
+  - Argo (2.3.0)
+  - BRYXBanner (0.5.2):
+    - BRYXBanner/Core (= 0.5.2)
+  - BRYXBanner/Core (0.5.2)
+  - Curry (2.0.0)
+  - Moya/Core (6.3.1):
+    - Alamofire (~> 3.0)
+    - Result (~> 1.0)
+  - Moya/RxSwift (6.3.1):
+    - Moya/Core
+    - RxSwift (~> 2.0)
+  - Nimble (3.2.0)
+  - Nuke (3.0.0)
+  - Quick (0.9.1)
+  - Result (1.0.2)
+  - RxCocoa (2.3.1):
+    - RxSwift (~> 2.3.1)
+  - RxSwift (2.3.1)
+
+DEPENDENCIES:
+  - Argo
+  - BRYXBanner (~> 0.5)
+  - Curry
+  - Moya/RxSwift
+  - Nimble
+  - Nuke (~> 3.0)
+  - Quick
+  - RxCocoa
+  - RxSwift
+
+SPEC CHECKSUMS:
+  Alamofire: 9054db4a1b1ca9e363223183e01cea380159a27c
+  Argo: 3dbecf4204b1a3cdd1df88ebd5e23d01b652d34b
+  BRYXBanner: 5f0911d52e0a77e088f7ea7ddcdebd02afb7828a
+  Curry: 5c5c5887d80fa22ca2133c7ea4d48c4d02283c0a
+  Moya: 852e26948a3771355ddf0f0109ac779b6fc30f28
+  Nimble: 703854335d181df169bbca9c97117b5cf8c47c1d
+  Nuke: 0bf58cc17da620fbfd9ecf67a2dd8d65ed50635e
+  Quick: a5221fc21788b6aeda934805e68b061839bc3165
+  Result: dd3dd71af3fa2e262f1a999e14fba2c25ec14f16
+  RxCocoa: a2baaf3462b989559a51dce59d78fbebb8fe0afa
+  RxSwift: 829b2843e9eddc77a02cb3f5117f0d55f8f646f1
+
+COCOAPODS: 0.39.0
