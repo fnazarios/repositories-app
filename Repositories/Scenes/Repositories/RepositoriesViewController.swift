@@ -2,8 +2,8 @@ import UIKit
 import BRYXBanner
 
 protocol RepositoriesViewControllerInput {
-    func displaySearchResult(viewModel: RepositoriesViewModel)
-    func displayResultWhenError(viewModel: RepositoriesViewModel)
+    func displaySearchResult(_ viewModel: RepositoriesViewModel)
+    func displayResultWhenError(_ viewModel: RepositoriesViewModel)
 }
 
 protocol RepositoriesViewControllerOutput {
@@ -52,46 +52,46 @@ class RepositoriesViewController: DefaultListViewController, RepositoriesViewCon
         self.output.searchRepositories(withRequest: request)
     }
     
-    func showErrorNotification(errorInfo: String?) {
-        let banner = Banner(title: NSLocalizedString("Something unusual happened 😁😔", comment: ""), subtitle: errorInfo, image: nil, backgroundColor: UIColor.redColor(), didTapBlock: nil)
+    func showErrorNotification(_ errorInfo: String?) {
+        let banner = Banner(title: NSLocalizedString("Something unusual happened 😁😔", comment: ""), subtitle: errorInfo, image: nil, backgroundColor: UIColor.red, didTapBlock: nil)
         banner.show(duration: 10.0)
     }
 }
 
 extension RepositoriesViewController: RepositoriesPresenterOutput {
     // MARK: Display logic
-    func displaySearchResult(viewModel: RepositoriesViewModel) {
+    func displaySearchResult(_ viewModel: RepositoriesViewModel) {
         self.endLoading()
         self.reloadTableViewAnimated(viewModel.repositories)
     }
     
-    func displayResultWhenError(viewModel: RepositoriesViewModel) {
+    func displayResultWhenError(_ viewModel: RepositoriesViewModel) {
         self.endLoading()
         self.showErrorNotification(viewModel.error)
     }
     
-    func reloadTableViewAnimated(repositories: [RepositoriesViewModel.Repository]?) {
+    func reloadTableViewAnimated(_ repositories: [RepositoriesViewModel.Repository]?) {
         guard let repos = repositories else { return }
         
         self.clearTableViewIfNeed()
         
-        var pathsReload: [NSIndexPath] = []
-        var pathsInsert: [NSIndexPath] = []
+        var pathsReload: [IndexPath] = []
+        var pathsInsert: [IndexPath] = []
         for repo in repos {
-            if self.tableViewData.contains({ $0.id == repo.id }) {
-                let indexFound = self.tableViewData.indexOf({ $0.id == repo.id })
-                self.tableViewData.removeAtIndex(indexFound!)
-                self.tableViewData.insert(repo, atIndex: indexFound!)
+            if self.tableViewData.contains(where: { $0.id == repo.id }) {
+                let indexFound = self.tableViewData.index(where: { $0.id == repo.id })
+                self.tableViewData.remove(at: indexFound!)
+                self.tableViewData.insert(repo, at: indexFound!)
                 
-                pathsReload.append(NSIndexPath(forRow: indexFound!, inSection: 0))
+                pathsReload.append(IndexPath(row: indexFound!, section: 0))
             } else {
                 self.tableViewData.append(repo)
-                pathsInsert.append(NSIndexPath(forRow: self.tableViewData.count-1, inSection: 0))
+                pathsInsert.append(IndexPath(row: self.tableViewData.count-1, section: 0))
             }
         }
         
-        self.repositoriesTableView.insertRowsAtIndexPaths(pathsInsert, withRowAnimation: .Fade)
-        self.repositoriesTableView.reloadRowsAtIndexPaths(pathsReload, withRowAnimation: .Fade)
+        self.repositoriesTableView.insertRows(at: pathsInsert, with: .fade)
+        self.repositoriesTableView.reloadRows(at: pathsReload, with: .fade)
     }
     
     func clearTableViewIfNeed() {
@@ -103,12 +103,12 @@ extension RepositoriesViewController: RepositoriesPresenterOutput {
 }
 
 extension RepositoriesViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tableViewData.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("RepositoryCell") as! RepositoryCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RepositoryCell") as! RepositoryCell
         
         let repo = self.tableViewData[indexPath.row]
         
@@ -116,7 +116,7 @@ extension RepositoriesViewController: UITableViewDataSource, UITableViewDelegate
         return cell
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == (self.tableViewData.count - 1) {
             self.page += 1
             self.fetchRepositories(withPage: self.page)

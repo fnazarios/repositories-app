@@ -1,6 +1,6 @@
 import UIKit
 
-public class UICustomRefreshControl: UIRefreshControl {
+open class UICustomRefreshControl: UIRefreshControl {
     
     public override init () {
         super.init()
@@ -11,22 +11,22 @@ public class UICustomRefreshControl: UIRefreshControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func configure(inView view: UIView, target: AnyObject, action: Selector) {
-        self.addTarget(target, action: action, forControlEvents: UIControlEvents.ValueChanged)
+    open func configure(inView view: UIView, target: AnyObject, action: Selector) {
+        self.addTarget(target, action: action, for: UIControlEvents.valueChanged)
         view.addSubview(self)
         
-        view.sendSubviewToBack(self)
+        view.sendSubview(toBack: self)
     }
     
-    public func beginLoading() {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    open func beginLoading() {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         self.attributedTitle = NSAttributedString(string: NSLocalizedString("Refreshing...", comment: ""))
         self.beginRefreshing()
     }
     
-    public func endLoading() {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-        self.attributedTitle = NSAttributedString(string: String(format: NSLocalizedString("Refreshed at %@", comment: ""), NSDate.dateToString(NSDate())!))
+    open func endLoading() {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+        self.attributedTitle = NSAttributedString(string: String(format: NSLocalizedString("Refreshed at %@", comment: ""), Date.dateToString(Date())!))
         self.endRefreshing()
     }
 }

@@ -23,7 +23,7 @@ class UIAvatarView: UIView {
     @IBInspectable
     var borderColor: UIColor? {
         didSet {
-            self.layer.borderColor = borderColor?.CGColor
+            self.layer.borderColor = borderColor?.cgColor
         }
     }
     
@@ -37,8 +37,8 @@ class UIAvatarView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.imgAvatar.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)
-        self.imgAvatar.contentMode = UIViewContentMode.ScaleAspectFill
+        self.imgAvatar.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
+        self.imgAvatar.contentMode = UIViewContentMode.scaleAspectFill
         self.addSubview(self.imgAvatar)
     }
     

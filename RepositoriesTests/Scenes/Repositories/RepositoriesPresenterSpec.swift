@@ -41,10 +41,10 @@ class FakeRepositoriesPresenterOutput: RepositoriesPresenterOutput {
     var displaySearchResultWasCalled: Bool = false
     var repositoriesViewModel: RepositoriesViewModel?
     
-    func displaySearchResult(viewModel: RepositoriesViewModel) {
+    func displaySearchResult(_ viewModel: RepositoriesViewModel) {
         self.displaySearchResultWasCalled = true
         self.repositoriesViewModel = viewModel
     }
     
-    func displayResultWhenError(viewModel: RepositoriesViewModel) { }
+    func displayResultWhenError(_ viewModel: RepositoriesViewModel) { }
 }

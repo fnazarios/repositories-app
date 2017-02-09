@@ -2,43 +2,56 @@ import Foundation
 import Moya
 
 enum GithubApi {
-    case Repositories(String, String, Int)
-    case PullRequests(String, String, Int)
+    case repositories(String, String, Int)
+    case pullRequests(String, String, Int)
 }
 
 extension GithubApi: TargetType {
-    var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
+    var baseURL: URL { return URL(string: "https://api.github.com")! }
+    
+    var task: Task {
+        return .request
+    }
     
     var path: String {
         switch self {
-        case .Repositories(_, _, _):
+        case .repositories(_, _, _):
             return "/search/repositories"
-        case .PullRequests(let repository, let owner, _):
+        case .pullRequests(let repository, let owner, _):
             return "/repos/\(owner)/\(repository)/pulls"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .Repositories(_, _, _), .PullRequests(_, _, _):
-            return .GET
+        case .repositories(_, _, _), .pullRequests(_, _, _):
+            return .get
         }
     }
     
-    var parameters: [String: AnyObject]? {
+    var parameters: [String: Any]? {
         switch self {
-        case .Repositories(let language, let sort, let page):
-            return ["q": "language:\(language)", "sort": sort, "page": page]
-        case .PullRequests(_, _, let page):
-            return ["page": page]
+        case .repositories(let language, let sort, let page):
+            return ["q": "language:\(language)" as AnyObject, "sort": sort as AnyObject, "page": page as AnyObject]
+        case .pullRequests(_, _, let page):
+            return ["page": page as AnyObject]
         }
     }
+    
+    var parameterEncoding: ParameterEncoding {
+        return URLEncoding()
+    }
 
-    var sampleData: NSData {
-        return NSData()
+    var sampleData: Data {
+        return Data()
+    }
+    
+    
+    var validate: Bool {
+        return false
     }
 }
 
-func url(route: TargetType) -> String {
-    return route.baseURL.URLByAppendingPathComponent(route.path).absoluteString
+func url(_ route: TargetType) -> String {
+    return route.baseURL.appendingPathComponent(route.path).absoluteString
 }

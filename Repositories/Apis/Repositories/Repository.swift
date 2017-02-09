@@ -1,6 +1,7 @@
 import Foundation
 import Argo
 import Curry
+import Runes
 
 struct Repository {
     let id: Int
@@ -13,7 +14,7 @@ struct Repository {
 }
 
 extension Repository: Decodable {
-    static func decode(j: JSON) -> Decoded<Repository> {
+    static func decode(_ j: JSON) -> Decoded<Repository> {
         return curry(Repository.init)
             <^> j <| "id"
             <*> j <| "name"

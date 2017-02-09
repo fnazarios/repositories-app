@@ -25,9 +25,9 @@ class FakeRepositoriesInteractorOutput: RepositoriesInteractorOutput {
     
     var presentSearchResultWasCalled: Bool = false
     
-    func presentSearchResult(response: RepositoriesResponse) {
+    func presentSearchResult(_ response: RepositoriesResponse) {
         self.presentSearchResultWasCalled = true
     }
     
-    func presentResultWhenError(response: RepositoriesResponse) { }
+    func presentResultWhenError(_ response: RepositoriesResponse) { }
 }

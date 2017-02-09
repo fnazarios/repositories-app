@@ -11,13 +11,14 @@ class RepositoryCell: UITableViewCell {
     @IBOutlet weak var ownerFullnameLabel: UILabel!
     @IBOutlet weak var ownerAvatarView: UIAvatarView!
     
-    func configure(repository: RepositoriesViewModel.Repository) {
+    func configure(_ repository: RepositoriesViewModel.Repository) {
         self.repositoryNameLabel?.text = repository.name
         self.repositoryDescriptionLabel.text = repository.description
         self.repositoryCountForksLabel.text = repository.countForks
         self.repositoryCountStarsLabel.text = repository.countStars
         self.ownerUsernameLabel.text = repository.ownerUsername
         self.ownerFullnameLabel.text = repository.ownerFullname
-        self.ownerAvatarView.imgAvatar.nk_setImageWith(NSURL(string: repository.ownerAvatarUrl)!)
+        
+        Nuke.loadImage(with: URL(string: repository.ownerAvatarUrl)!, into: self.ownerAvatarView.imgAvatar)
     }
 }

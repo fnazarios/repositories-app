@@ -9,11 +9,12 @@ class PullRequestCell: UITableViewCell {
     @IBOutlet weak var userUsernameLabel: UILabel!
     @IBOutlet weak var userAvatarView: UIAvatarView!
     
-    func configure(pullRequest: PullRequestsViewModel.PullRequest) {
+    func configure(_ pullRequest: PullRequestsViewModel.PullRequest) {
         self.titleLabel?.text = pullRequest.title
         self.bodyLabel.text = pullRequest.body
         self.createdAtLabel.text = pullRequest.createdAt
         self.userUsernameLabel.text = pullRequest.userUsername
-        self.userAvatarView.imgAvatar.nk_setImageWith(NSURL(string: pullRequest.userAvatarUrl)!)
+        
+        Nuke.loadImage(with: URL(string: pullRequest.userAvatarUrl)!, into: self.userAvatarView.imgAvatar)
     }
 }

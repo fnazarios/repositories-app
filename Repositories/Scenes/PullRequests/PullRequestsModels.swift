@@ -1,7 +1,7 @@
 import UIKit
 
-enum PullRequestsError: ErrorType {
-    case WrongSearch(message: String, detail: String)
+enum PullRequestsError: Swift.Error {
+    case wrongSearch(message: String, detail: String)
 }
 
 struct PullRequestsRequest {

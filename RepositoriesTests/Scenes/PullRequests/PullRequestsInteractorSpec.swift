@@ -31,9 +31,9 @@ class PullRequestsInteractorSpec: QuickSpec {
 class FakePullRequestsInteractorOutput: PullRequestsInteractorOutput {
     
     var presentPullRequestsWasCalled: Bool = false
-    func presentPullRequests(response: PullRequestsResponse) {
+    func presentPullRequests(_ response: PullRequestsResponse) {
         self.presentPullRequestsWasCalled = true
     }
     
-    func presentPullRequestsWhenError(response: PullRequestsResponse) { }
+    func presentPullRequestsWhenError(_ response: PullRequestsResponse) { }
 }

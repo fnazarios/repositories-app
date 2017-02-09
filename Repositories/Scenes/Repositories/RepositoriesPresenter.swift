@@ -1,20 +1,20 @@
 import UIKit
 
 protocol RepositoriesPresenterInput {
-    func presentSearchResult(response: RepositoriesResponse)
-    func presentResultWhenError(response: RepositoriesResponse)
+    func presentSearchResult(_ response: RepositoriesResponse)
+    func presentResultWhenError(_ response: RepositoriesResponse)
 }
 
 protocol RepositoriesPresenterOutput: class {
-    func displaySearchResult(viewModel: RepositoriesViewModel)
-    func displayResultWhenError(viewModel: RepositoriesViewModel)
+    func displaySearchResult(_ viewModel: RepositoriesViewModel)
+    func displayResultWhenError(_ viewModel: RepositoriesViewModel)
 }
 
 class RepositoriesPresenter: RepositoriesPresenterInput {
     weak var output: RepositoriesPresenterOutput!
     
     // MARK: Presentation logic
-    func presentSearchResult(response: RepositoriesResponse) {
+    func presentSearchResult(_ response: RepositoriesResponse) {
         let repositories = response.repositories?.map { (repo) -> RepositoriesViewModel.Repository in
             return RepositoriesViewModel.Repository(
                 id: "\(repo.id)",
@@ -31,10 +31,10 @@ class RepositoriesPresenter: RepositoriesPresenterInput {
         self.output.displaySearchResult(viewModel)
     }
     
-    func presentResultWhenError(response: RepositoriesResponse) {
+    func presentResultWhenError(_ response: RepositoriesResponse) {
         var error = ""
         switch response.error {
-        case .WrongSearch(let message, let detail)?:
+        case .wrongSearch(let message, let detail)?:
             error = "\(message)\n\(detail)"
         default:
             break

@@ -7,8 +7,8 @@ protocol RepositoriesInteractorInput {
 }
 
 protocol RepositoriesInteractorOutput {
-    func presentSearchResult(response: RepositoriesResponse)
-    func presentResultWhenError(response: RepositoriesResponse)
+    func presentSearchResult(_ response: RepositoriesResponse)
+    func presentResultWhenError(_ response: RepositoriesResponse)
 }
 
 class RepositoriesInteractor: RepositoriesInteractorInput {
@@ -26,44 +26,44 @@ class RepositoriesInteractor: RepositoriesInteractorInput {
             .addDisposableTo(self.disposeBag)
     }
     
-    private func handleSearchRepositories(event: Event<RepositoriesSummary>) {
+    fileprivate func handleSearchRepositories(_ event: Event<RepositoriesSummary>) {
         switch event {
-        case .Next(let summary):
+        case .next(let summary):
             self.handleSuccess(summary)
-        case .Error(let err):
+        case .error(let err):
             self.handleError(err)
-        case .Completed: break
+        case .completed: break
         }
     }
     
-    private func handleSuccess(summary: RepositoriesSummary) {
+    fileprivate func handleSuccess(_ summary: RepositoriesSummary) {
         self.repositories = summary.repositories
         
         let response = RepositoriesResponse(repositories: summary.repositories, error: nil)
         self.output.presentSearchResult(response)
     }
     
-    private func handleError(error: ErrorType) {
+    fileprivate func handleError(_ error: Swift.Error) {
         guard let apiError = error as? ApiError else { return }
         
         switch apiError {
-        case .FailureRequest(_, let errorSummary):
+        case .failureRequest(_, let errorSummary):
             guard let error = errorSummary else { return }
             let resumeErrors = self.formatError(error)
-            let response = RepositoriesResponse(repositories: nil, error: RepositoriesSearchError.WrongSearch(message: error.message, detail: resumeErrors))
+            let response = RepositoriesResponse(repositories: nil, error: RepositoriesSearchError.wrongSearch(message: error.message, detail: resumeErrors))
             self.output.presentResultWhenError(response)
         default: break
         }
     }
     
-    private func formatError(errorSummary: ErrorSummary) -> String {
+    fileprivate func formatError(_ errorSummary: ErrorSummary) -> String {
         var resume = ""
         for index in 0...errorSummary.errors.count-1 {
             let err = errorSummary.errors[index]
             if index == 0 {
                 resume = "resource: \(err.resource), field: \(err.field), code: \(err.code)"
             } else {
-                resume.appendContentsOf("\nresource: \(err.resource), field: \(err.field), code: \(err.code)")
+                resume.append("\nresource: \(err.resource), field: \(err.field), code: \(err.code)")
             }
         }
         

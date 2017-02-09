@@ -3,8 +3,8 @@ import SafariServices
 
 class SafariViewController: SFSafariViewController {
 
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.Default
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return UIStatusBarStyle.default
     }
 
 }

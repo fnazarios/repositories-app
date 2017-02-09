@@ -1,18 +1,19 @@
 import Foundation
 import Argo
 import Curry
+import Runes
 
 struct PullRequest {
     let id: Int
     let title: String
     let body: String
-    let createdAt: NSDate
+    let createdAt: Date
     let url: String
     let user: User
 }
 
 extension PullRequest: Decodable {
-    static func decode(j: JSON) -> Decoded<PullRequest> {
+    static func decode(_ j: JSON) -> Decoded<PullRequest> {
         return curry(PullRequest.init)
             <^> j <| "id"
             <*> j <| "title"

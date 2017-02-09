@@ -1,20 +1,20 @@
 import UIKit
 
 protocol PullRequestsPresenterInput {
-    func presentPullRequests(response: PullRequestsResponse)
-    func presentPullRequestsWhenError(response: PullRequestsResponse)
+    func presentPullRequests(_ response: PullRequestsResponse)
+    func presentPullRequestsWhenError(_ response: PullRequestsResponse)
 }
 
 protocol PullRequestsPresenterOutput: class {
-    func displayPullRequests(viewModel: PullRequestsViewModel)
-    func displayPullRequestsWhenError(viewModel: PullRequestsViewModel)
+    func displayPullRequests(_ viewModel: PullRequestsViewModel)
+    func displayPullRequestsWhenError(_ viewModel: PullRequestsViewModel)
 }
 
 class PullRequestsPresenter: PullRequestsPresenterInput {
     weak var output: PullRequestsPresenterOutput!
     
     // MARK: Presentation logic
-    func presentPullRequests(response: PullRequestsResponse) {
+    func presentPullRequests(_ response: PullRequestsResponse) {
         let pullRequests = response.pullRequests?.map { (pr) -> PullRequestsViewModel.PullRequest in
             return PullRequestsViewModel.PullRequest(
                 id: "\(pr.id)",
@@ -30,10 +30,10 @@ class PullRequestsPresenter: PullRequestsPresenterInput {
         self.output.displayPullRequests(viewModel)
     }
     
-    func presentPullRequestsWhenError(response: PullRequestsResponse) {
+    func presentPullRequestsWhenError(_ response: PullRequestsResponse) {
         var error = ""
         switch response.error {
-        case .WrongSearch(let message, let detail)?:
+        case .wrongSearch(let message, let detail)?:
             error = "\(message)\n\(detail)"
         default:
             break

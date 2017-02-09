@@ -28,7 +28,7 @@ class RepositoriesViewSpec: QuickSpec {
                 }
                 
                 fit("started refresh repositories") {
-                    expect(repositoriesViewController.refreshControl.refreshing).to(beTruthy())
+                    expect(repositoriesViewController.refreshControl.isRefreshing).to(beTruthy())
                 }
             }
         }

@@ -1,7 +1,7 @@
 import UIKit
 
-enum RepositoriesSearchError: ErrorType {
-    case WrongSearch(message: String, detail: String)
+enum RepositoriesSearchError: Swift.Error {
+    case wrongSearch(message: String, detail: String)
 }
 
 enum Sort: String {

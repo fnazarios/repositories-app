@@ -2,7 +2,7 @@ import UIKit
 
 // MARK: Connect View, Interactor, and Presenter
 extension RepositoriesViewController {
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         self.router.passDataToNextScene(segue)
     }
 }
@@ -12,22 +12,11 @@ extension RepositoriesInteractor: RepositoriesViewControllerOutput { }
 extension RepositoriesPresenter: RepositoriesInteractorOutput { }
 
 class RepositoriesConfigurator {
-    // MARK: Object lifecycle
-    class var sharedInstance: RepositoriesConfigurator {
-        struct Static {
-            static var instance: RepositoriesConfigurator?
-            static var token: dispatch_once_t = 0
-        }
-        
-        dispatch_once(&Static.token) {
-            Static.instance = RepositoriesConfigurator()
-        }
-        
-        return Static.instance!
-    }
+
+    static let sharedInstance: RepositoriesConfigurator = RepositoriesConfigurator()
     
     // MARK: Configuration
-    func configure(viewController: RepositoriesViewController) {
+    func configure(_ viewController: RepositoriesViewController) {
         let router = RepositoriesRouter()
         router.viewController = viewController
         

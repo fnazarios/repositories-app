@@ -10,15 +10,15 @@ class RepositoriesRouter: RepositoriesRouterInput {
     // MARK: Navigation
 
     // MARK: Communication
-    func passDataToNextScene(segue: UIStoryboardSegue) {
+    func passDataToNextScene(_ segue: UIStoryboardSegue) {
         if segue.identifier == "SEGUE_SHOW_PRS" {
             self.passRepositoryToPullRequestsScene(segue)
         }
     }
     
-    func passRepositoryToPullRequestsScene(segue: UIStoryboardSegue) {
+    func passRepositoryToPullRequestsScene(_ segue: UIStoryboardSegue) {
         if let indexPathSelected = viewController.repositoriesTableView.indexPathForSelectedRow {
-            let pullRequestsViewController = segue.destinationViewController as! PullRequestsViewController
+            let pullRequestsViewController = segue.destination as! PullRequestsViewController
             pullRequestsViewController.output.repository = self.viewController.output.repositories?[indexPathSelected.row]
         }
     }

@@ -1,6 +1,7 @@
 import Foundation
 import Argo
 import Curry
+import Runes
 
 struct User {
     let id: Int
@@ -9,7 +10,7 @@ struct User {
 }
 
 extension User: Decodable {
-    static func decode(j: JSON) -> Decoded<User> {
+    static func decode(_ j: JSON) -> Decoded<User> {
         return curry(User.init)
             <^> j <| "id"
             <*> j <| "login"

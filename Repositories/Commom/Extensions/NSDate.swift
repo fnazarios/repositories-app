@@ -1,21 +1,21 @@
 import Foundation
 import UIKit
 
-extension NSDate {
-    public static func dateToString(value: NSDate) -> String? {
+extension Date {
+    public static func dateToString(_ value: Date) -> String? {
         return self.dateToString(value, format: "dd/MMM/yy, HH:mm")
     }
     
-    public static func dateToString(date: NSDate, format: String) -> String? {
-        let formatter = NSDateFormatter()
+    public static func dateToString(_ date: Date, format: String) -> String? {
+        let formatter = DateFormatter()
         formatter.dateFormat = format
-        return formatter.stringFromDate(date)
+        return formatter.string(from: date)
     }
     
-    public func stringFromDate(format: String) -> String? {
-        let dateFormatter = NSDateFormatter()
+    public func stringFromDate(_ format: String) -> String? {
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        return dateFormatter.stringFromDate(self)
+        return dateFormatter.string(from: self)
     }
 }
 
@@ -23,28 +23,29 @@ extension NSDate {
 import Argo
 import Curry
 
-extension NSDate: Decodable {
-    static var formatter: NSDateFormatter {
-        let df = NSDateFormatter()
-        df.calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
+extension Date: Decodable {
+    static var formatter: DateFormatter {
+        let df = DateFormatter()
+        df.calendar = Calendar.current
         df.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
         return df
     }
-    
-    public static func decode(json: JSON) -> Decoded<NSDate> {
-        switch(json) {
-        case .String(var dateString):
-            
-            dateString = dateString.stringByReplacingOccurrencesOfString("T", withString: " ", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-            dateString = dateString.stringByReplacingOccurrencesOfString("Z", withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
 
-            guard let date = formatter.dateFromString(dateString) else {
-                return Decoded<NSDate>.typeMismatch("date", actual: dateString)
+    public static func decode(_ json: JSON) -> Decoded<Date> {
+        switch(json) {
+        case .string(var dateString):
+            
+            dateString = dateString.replacingOccurrences(of: "T", with: " ")
+            dateString = dateString.replacingOccurrences(of: "Z", with: " ")
+
+            if let date = formatter.date(from: dateString) {
+                return pure(date)
             }
-            return pure(date)
+            
+            return Decoded<Date>.typeMismatch(expected: "date", actual: dateString)
         default:
-            return Decoded<NSDate>.typeMismatch("date", actual: json.description)
+            return Decoded<Date>.typeMismatch(expected: "date", actual: json.description)
         }
     }
 }

@@ -6,7 +6,7 @@ class PullRequestsPresenterSpec: QuickSpec {
     override func spec() {
         fdescribe("PullRequests Presenter") {
             fcontext("diplay pull requests") {
-                let pullRequest = PullRequest(id: 64199285, title: "Fixed redirect with completion property not being called", body: "The new completion properties weren't getting called due to the bad `respondsToSelector` check.", createdAt: NSDate(), url: "", user: User(id: 1, login: "spec", avatarUrl: ""))
+                let pullRequest = PullRequest(id: 64199285, title: "Fixed redirect with completion property not being called", body: "The new completion properties weren't getting called due to the bad `respondsToSelector` check.", createdAt: Date(), url: "", user: User(id: 1, login: "spec", avatarUrl: ""))
                 let fakePresenterOutput = FakePullRequestsPresenterOutput()
                 beforeEach {
                     let presenter = PullRequestsPresenter()
@@ -41,10 +41,10 @@ class FakePullRequestsPresenterOutput: PullRequestsPresenterOutput {
     var displayPullRequestsWasCalled: Bool = false
     var pullRequestsViewModel: PullRequestsViewModel?
     
-    func displayPullRequests(viewModel: PullRequestsViewModel) {
+    func displayPullRequests(_ viewModel: PullRequestsViewModel) {
         self.displayPullRequestsWasCalled = true
         self.pullRequestsViewModel = viewModel
     }
     
-    func displayPullRequestsWhenError(viewModel: PullRequestsViewModel) { }
+    func displayPullRequestsWhenError(_ viewModel: PullRequestsViewModel) { }
 }

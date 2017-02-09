@@ -2,7 +2,7 @@ import UIKit
 
 // MARK: Connect View, Interactor, and Presenter
 extension PullRequestsViewController: PullRequestsPresenterOutput {
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         self.router.passDataToNextScene(segue)
     }
 }
@@ -14,23 +14,11 @@ extension PullRequestsPresenter: PullRequestsInteractorOutput {
 }
 
 class PullRequestsConfigurator {
-    // MARK: Object lifecycle
-    class var sharedInstance: PullRequestsConfigurator {
-        struct Static {
-            static var instance: PullRequestsConfigurator?
-            static var token: dispatch_once_t = 0
-        }
-        
-        dispatch_once(&Static.token) {
-            Static.instance = PullRequestsConfigurator()
-        }
-        
-        return Static.instance!
-    }
+    static let sharedInstance: PullRequestsConfigurator = PullRequestsConfigurator()
     
     // MARK: Configuration
     
-    func configure(viewController: PullRequestsViewController) {
+    func configure(_ viewController: PullRequestsViewController) {
         let router = PullRequestsRouter()
         router.viewController = viewController
         

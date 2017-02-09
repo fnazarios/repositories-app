@@ -3,12 +3,12 @@ import BRYXBanner
 import SafariServices
 
 protocol PullRequestsViewControllerInput {
-    func displayPullRequests(viewModel: PullRequestsViewModel)
-    func displayPullRequestsWhenError(viewModel: PullRequestsViewModel)
+    func displayPullRequests(_ viewModel: PullRequestsViewModel)
+    func displayPullRequestsWhenError(_ viewModel: PullRequestsViewModel)
 }
 
 protocol PullRequestsViewControllerOutput {
-    func fetchPullRequests(request: PullRequestsRequest)
+    func fetchPullRequests(_ request: PullRequestsRequest)
     var repository: Repository! { get set }
 }
 
@@ -58,43 +58,43 @@ class PullRequestsViewController: DefaultListViewController, PullRequestsViewCon
     }
     
     // MARK: Display logic
-    func displayPullRequests(viewModel: PullRequestsViewModel) {
+    func displayPullRequests(_ viewModel: PullRequestsViewModel) {
         self.endLoading()
         self.reloadTableViewAnimated(viewModel.pullRequests)
     }
     
-    func displayPullRequestsWhenError(viewModel: PullRequestsViewModel) {
+    func displayPullRequestsWhenError(_ viewModel: PullRequestsViewModel) {
         self.endLoading()
         self.showErrorNotification(viewModel.error)
     }
     
-    func showErrorNotification(errorInfo: String?) {
-        let banner = Banner(title: NSLocalizedString("Something unusual happened 😁😔", comment: ""), subtitle: errorInfo, image: nil, backgroundColor: UIColor.redColor(), didTapBlock: nil)
+    func showErrorNotification(_ errorInfo: String?) {
+        let banner = Banner(title: NSLocalizedString("Something unusual happened 😁😔", comment: ""), subtitle: errorInfo, image: nil, backgroundColor: UIColor.red, didTapBlock: nil)
         banner.show(duration: 10.0)
     }
     
-    func reloadTableViewAnimated(pullRequests: [PullRequestsViewModel.PullRequest]?) {
+    func reloadTableViewAnimated(_ pullRequests: [PullRequestsViewModel.PullRequest]?) {
         guard let prs = pullRequests else { return }
         
         self.clearTableViewIfNeed()
         
-        var pathsReload: [NSIndexPath] = []
-        var pathsInsert: [NSIndexPath] = []
+        var pathsReload: [IndexPath] = []
+        var pathsInsert: [IndexPath] = []
         for pullRequest in prs {
-            if self.tableViewData.contains({ $0.id == pullRequest.id }) {
-                let indexFound = self.tableViewData.indexOf({ $0.id == pullRequest.id })
-                self.tableViewData.removeAtIndex(indexFound!)
-                self.tableViewData.insert(pullRequest, atIndex: indexFound!)
+            if self.tableViewData.contains(where: { $0.id == pullRequest.id }) {
+                let indexFound = self.tableViewData.index(where: { $0.id == pullRequest.id })
+                self.tableViewData.remove(at: indexFound!)
+                self.tableViewData.insert(pullRequest, at: indexFound!)
                 
-                pathsReload.append(NSIndexPath(forRow: indexFound!, inSection: 0))
+                pathsReload.append(IndexPath(row: indexFound!, section: 0))
             } else {
                 self.tableViewData.append(pullRequest)
-                pathsInsert.append(NSIndexPath(forRow: self.tableViewData.count-1, inSection: 0))
+                pathsInsert.append(IndexPath(row: self.tableViewData.count-1, section: 0))
             }
         }
         
-        self.pullRequestsTableView.insertRowsAtIndexPaths(pathsInsert, withRowAnimation: .Fade)
-        self.pullRequestsTableView.reloadRowsAtIndexPaths(pathsReload, withRowAnimation: .Fade)
+        self.pullRequestsTableView.insertRows(at: pathsInsert, with: .fade)
+        self.pullRequestsTableView.reloadRows(at: pathsReload, with: .fade)
     }
     
     func clearTableViewIfNeed() {
@@ -104,19 +104,19 @@ class PullRequestsViewController: DefaultListViewController, PullRequestsViewCon
         }
     }
     
-    func openPullRequest(pullRequest: PullRequestsViewModel.PullRequest) {
-        let safariViewController = SafariViewController(URL: NSURL(string: pullRequest.url)!)
-        self.presentViewController(safariViewController, animated: true, completion: nil)
+    func openPullRequest(_ pullRequest: PullRequestsViewModel.PullRequest) {
+        let safariViewController = SafariViewController(url: URL(string: pullRequest.url)!)
+        self.present(safariViewController, animated: true, completion: nil)
     }
 }
 
 extension PullRequestsViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.tableViewData.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("PullRequestCell") as! PullRequestCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PullRequestCell") as! PullRequestCell
         
         let pr = self.tableViewData[indexPath.row]
         
@@ -124,14 +124,14 @@ extension PullRequestsViewController: UITableViewDataSource, UITableViewDelegate
         return cell
     }
     
-    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == (self.tableViewData.count - 1) {
             self.page += 1
             self.fetchPullRequests(withPage: self.page)
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let pr = self.tableViewData[indexPath.row]
         self.openPullRequest(pr)
     }

@@ -1,6 +1,7 @@
 import Foundation
 import Argo
 import Curry
+import Runes
 
 struct Error {
     let resource: String
@@ -14,7 +15,7 @@ struct ErrorSummary {
 }
 
 extension Error: Decodable {
-    static func decode(j: JSON) -> Decoded<Error> {
+    static func decode(_ j: JSON) -> Decoded<Error> {
         return curry(Error.init)
             <^> j <| "resource"
             <*> j <| "field"
@@ -23,7 +24,7 @@ extension Error: Decodable {
 }
 
 extension ErrorSummary: Decodable {
-    static func decode(j: JSON) -> Decoded<ErrorSummary> {
+    static func decode(_ j: JSON) -> Decoded<ErrorSummary> {
         return curry(ErrorSummary.init)
             <^> j <| "message"
             <*> j <|| "errors"

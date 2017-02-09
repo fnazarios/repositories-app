@@ -5,20 +5,20 @@ import Argo
 
 func endpointsClosure() -> (GithubApi) -> Endpoint<GithubApi> {
     return { (target: GithubApi) -> Endpoint<GithubApi> in
-        let parameterEncoding: Moya.ParameterEncoding = (target.method == .POST) ? .JSON : .URL
+        let parameterEncoding: Moya.ParameterEncoding = (target.method == .post) ? JSONEncoding() : URLEncoding()
         print("[\(target.method)] \(url(target))")
         print("[Params] \(target.parameters)")
-        return Endpoint<GithubApi>(URL: url(target), sampleResponseClosure: { () -> EndpointSampleResponse in
-            return EndpointSampleResponse.NetworkResponse(200, target.sampleData)
+        return Endpoint<GithubApi>(url: url(target), sampleResponseClosure: { () -> EndpointSampleResponse in
+            return EndpointSampleResponse.networkResponse(200, target.sampleData)
         }, method: target.method, parameters: target.parameters, parameterEncoding: parameterEncoding)
     }
 }
 
-enum ApiError: ErrorType {
-    case UnknownError()
-    case FailureRequest(Int, ErrorSummary?)
-    case FailureMapToDomain(ErrorType?)
-    case FailureMapToJson()
+enum ApiError: Swift.Error {
+    case unknownError()
+    case failureRequest(Int, ErrorSummary?)
+    case failureMapToDomain(Swift.Error?)
+    case failureMapToJson()
 }
 
 extension ObservableType where E: Response {
@@ -27,53 +27,58 @@ extension ObservableType where E: Response {
         return statusCodes(200...299)
     }
     
-    func statusCodes(range: ClosedInterval<Int>) -> Observable<E> {
+    func statusCodes(_ range: ClosedRange<Int>) -> Observable<E> {
         return flatMap { response -> Observable<E> in
+
+            print("\(response.statusCode) [\(response.request?.httpMethod ?? "")] \(response.request?.url?.absoluteString ?? "")")
+//            let body = NSString(data: response.data, encoding: String.Encoding.utf8.rawValue) as! String
+//            print("[Body] \(body)")
+            
             guard range.contains(response.statusCode) else {
                 
-                let json = try? NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
+                let json = try? JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
                 if let j = json {
                     let apiError: ErrorSummary? = decode(j)
-                    throw ApiError.FailureRequest(response.statusCode, apiError)
+                    throw ApiError.failureRequest(response.statusCode, apiError)
                 }
                 
-                throw ApiError.FailureRequest(response.statusCode, nil)
+                throw ApiError.failureRequest(response.statusCode, nil)
             }
             
             return Observable.just(response)
         }
     }
     
-    func mapToDomain<T: Decodable where T == T.DecodedType>() -> Observable<T> {
+    func mapToDomain<T: Decodable>() -> Observable<T> where T == T.DecodedType {
         return map { response -> T in
             do {
-                let json = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
+                let json = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
                 let decoded: Decoded<T> = decode(json)
-                return try self.assertDecoded(decoded, json: json)
+                return try self.assertDecoded(decoded, json: json as AnyObject)
             } catch {
                 throw error
             }
         }
     }
     
-    func mapArrayToDomain<T: Decodable where T == T.DecodedType>() -> Observable<[T]> {
+    func mapArrayToDomain<T: Decodable>() -> Observable<[T]> where T == T.DecodedType {
         return map { response -> [T] in
             do {
-                let json = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments)
+                let json = try JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
                 let decoded: Decoded<[T]> = decode(json)
-                return try self.assertDecoded(decoded, json: json)
+                return try self.assertDecoded(decoded, json: json as AnyObject)
             } catch {
                 throw error
             }
         }
     }
     
-    func assertDecoded<T>(decoded: Decoded<T>, json: AnyObject) throws -> T {
+    func assertDecoded<T>(_ decoded: Decoded<T>, json: AnyObject) throws -> T {
         switch decoded {
-        case .Success(let value):
+        case .success(let value):
             return value
-        case .Failure(let err):
-            throw ApiError.FailureMapToDomain(err)
+        case .failure(let err):
+            throw ApiError.failureMapToDomain(err)
         }
     }
 }

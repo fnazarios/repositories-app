@@ -6,7 +6,7 @@ class DefaultListViewController: UIViewController {
     var refreshControl: UICustomRefreshControl!
     
     lazy var disposeBag = DisposeBag()
-    lazy var appDelegate: AppDelegate? = UIApplication.sharedApplication().delegate as? AppDelegate
+    lazy var appDelegate: AppDelegate? = UIApplication.shared.delegate as? AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
